@@ -3,6 +3,7 @@ import { PrismaService } from 'src/database/prisma.service';
 import { CreateUserDto } from './dto/create';
 import * as bcrypt from 'bcrypt'
 import { randomUUID } from 'crypto';
+import { Role } from './model/roles';
 
 @Injectable()
 export class UserService {
@@ -35,7 +36,8 @@ export class UserService {
         first_name,
         last_name,
         username: `${first_name} ${last_name}`,
-        password: passwordHash
+        password: passwordHash,
+        role: Role.User,
       }
     })
 

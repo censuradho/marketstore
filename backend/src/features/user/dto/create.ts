@@ -3,6 +3,7 @@ import { IsEmail, MaxLength, MinLength } from "class-validator";
 import { User } from "../model/user";
 
 export class CreateUserDto implements User {
+  role: string;
   id: string;
   @IsString()
   first_name: string;
