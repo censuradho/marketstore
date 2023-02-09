@@ -4,6 +4,7 @@ import { AppController } from './app.controller';
 import { PrismaService } from './database/prisma.service';
 import { FeaturesModule } from './features';
 import { JwtAuthGuard } from './features/auth/guards/jwt-auth.guard';
+import { RolesGuard } from './features/auth/guards/role.guard';
 
 
 @Module({
@@ -13,6 +14,10 @@ import { JwtAuthGuard } from './features/auth/guards/jwt-auth.guard';
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
     },
   ],
 })
