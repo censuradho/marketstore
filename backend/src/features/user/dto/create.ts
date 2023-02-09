@@ -1,5 +1,5 @@
 import { IsString } from "class-validator";
-import { IsEmail, MaxLength, MinLength } from "class-validator/types/decorator/decorators";
+import { IsEmail, MaxLength, MinLength } from "class-validator";
 import { User } from "../model/user";
 
 export class CreateUserDto implements User {
