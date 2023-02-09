@@ -67,7 +67,7 @@ model Sale {
 
   purchase Shopping?
 
-  category Category @relation(fields: [category_id], references: [id])
+  category Category? @relation(fields: [category_id], references: [id])
   category_id String
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
