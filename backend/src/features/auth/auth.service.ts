@@ -45,6 +45,26 @@ export class AuthService {
     }
   }
 
+
+  async revalidate(email: string) {
+    const user = await this.userService.findByEmail(email)
+
+    if (!user)
+      throw new UnauthorizedException({
+        description: 'USER_NOT_FOUND',
+      })
+
+    const payload: UserPayload = {
+      sub: user.id,
+      email: user.email,
+    }
+
+    return {
+      ...payload,
+      access_token: this.jwtService.sign(payload),
+    }
+  }
+
   async SignUp(payload: CreateUserDto) {
     return await this.userService.create(payload)
   }

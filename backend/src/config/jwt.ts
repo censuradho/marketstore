@@ -4,6 +4,6 @@ import { environments } from './environments'
 export const jwtConfig: JwtModuleOptions = {
   secret: environments.jwtSecret,
   signOptions: {
-    expiresIn: '30d',
+    expiresIn: 1000,
   },
 }
