@@ -16,7 +16,9 @@ export class ProductService {
     const {
       condition,
       description,
-      price
+      price,
+      name,
+      sale_id
     } = payload
 
     await this.prisma.product.create({
@@ -26,11 +28,12 @@ export class ProductService {
         condition,
         description,
         price,
-        user: {
+        name,
+        sale: {
           connect: {
-            id: this.request.user.id,
+            id: sale_id
           }
-        },
+        }
       }
     })
   }

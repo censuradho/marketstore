@@ -45,7 +45,6 @@ model Product {
   price Float
   condition String
 
-
   sale Sale @relation(fields: [sale_id], references: [id])
   sale_id String
 
@@ -58,7 +57,7 @@ model Product {
 model Sale {
   id String @id
 
-  active Boolean @default(false)
+  active Boolean @default(true)
   
   saller User @relation(fields: [saller_id], references: [id])
   saller_id String

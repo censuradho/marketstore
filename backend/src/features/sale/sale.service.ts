@@ -7,5 +7,7 @@ export class SaleService {
   constructor(
     private readonly productService: ProductService,
     private readonly prisma: PrismaService
-  ) {}
+  ) {
+  }
+  async create () {}
 }

@@ -6,6 +6,8 @@ export enum Condition {
 }
 
 export class Product implements TypeProduct {
+  name: string;
+  sale_id: string;
   id: string;
   description: string;
   sold: boolean;
@@ -13,6 +15,4 @@ export class Product implements TypeProduct {
   condition: Condition;
   created_at: Date;
   updated_at: Date;
-  user_id: string;
-  active: boolean;
 }
