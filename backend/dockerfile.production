@@ -1,0 +1,22 @@
+FROM node:18-alpine
+
+# set work directory
+WORKDIR /usr/src/app
+
+# copy all files to container and rename file .env.production to .env
+COPY package.json .
+
+# install dependencies
+RUN npm install --quiet --no-optional --no-found --loglevel=error
+
+COPY ./.env.production ./.env
+
+COPY . .
+
+RUN npm run prisma:generate
+
+RUN npm run build
+
+EXPOSE 3333
+
+CMD ["npm", "run", "start:prod"]
