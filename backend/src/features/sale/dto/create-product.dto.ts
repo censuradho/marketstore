@@ -1,4 +1,4 @@
-import { IsEnum, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsEnum, IsNumber, IsString } from "class-validator";
 import { Condition, Product } from "../model/product";
 
 export class CreateProductDto implements Product {
@@ -6,12 +6,10 @@ export class CreateProductDto implements Product {
   created_at: Date;
   updated_at: Date;
   sold: boolean;
+  sale_id: string;
 
   @IsString()
-  sale_id: string;
-  @IsString()
   name: string;
-  @IsOptional()
   @IsString()
   description: string;
   @IsNumber()

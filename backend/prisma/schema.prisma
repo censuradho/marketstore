@@ -33,6 +33,7 @@ model Category {
   id String @id
   name String
 
+  sales Sale[]
   created_at DateTime @default(now())
   @@map("categories")
 }
@@ -66,6 +67,8 @@ model Sale {
 
   purchase Shopping?
 
+  category Category @relation(fields: [category_id], references: [id])
+  category_id String
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
 
