@@ -4,6 +4,7 @@ import * as bcrypt from 'bcrypt'
 import { User } from "../user/model/user";
 import { JwtService } from "@nestjs/jwt";
 import { UserPayload } from "./models/user-payload";
+import { CreateUserDto } from "../user/dto/create";
 
 @Injectable()
 export class AuthService {
@@ -42,5 +43,9 @@ export class AuthService {
       ...user,
       password: undefined,
     }
+  }
+
+  async SignUp(payload: CreateUserDto) {
+    return await this.userService.create(payload)
   }
 }

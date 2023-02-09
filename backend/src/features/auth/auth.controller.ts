@@ -1,4 +1,5 @@
-import { Controller, Post, Request, UseGuards } from "@nestjs/common";
+import { Body, Controller, Post, Request, UseGuards } from "@nestjs/common";
+import { CreateUserDto } from "../user/dto/create";
 import { AuthService } from "./auth.service";
 import { IsPublic } from "./decorators/is-public.decorator";
 import { LocalAuthGuard } from "./guards/local-auth.guard";
@@ -13,5 +14,11 @@ export class AuthController {
   @Post('login')
   async login (@Request() request: AuthRequest) {
     return await this.service.login(request.user)
+  }
+
+  @IsPublic()
+  @Post('sign-up')
+  async SignUp (@Body() body: CreateUserDto) {
+    return await this.service.SignUp(body)
   }
 }
