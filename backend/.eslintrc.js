@@ -26,10 +26,12 @@ module.exports = {
     "endOfLine": "off",
     "@typescript-eslint/no-empty-interface": "off",
     "@typescript-eslint/no-non-null-assertion": "warn",
+    "semi": [2, "never"],
     "prettier/prettier": [
       "error",
       {
         "endOfLine": "auto",
+        "semi": "false"
       },
     ],
   },
