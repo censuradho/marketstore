@@ -10,4 +10,5 @@ export class SaleController {
   async create (@Body() body: CreateSaleDto) {
     await this.service.create(body)
   }
+  
 }
