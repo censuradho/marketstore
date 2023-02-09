@@ -35,7 +35,7 @@ model Product {
   id String @id
   description String
   active Boolean @default(false)
-  sold Boolean
+  sold Boolean @default(false)
   price Float
   condition String
   created_at DateTime @default(now())
