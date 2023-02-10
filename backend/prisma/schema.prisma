@@ -38,6 +38,20 @@ model Category {
   @@map("categories")
 }
 
+model File {
+  id String @id
+  width Float
+  height Float
+  url String
+  format String?
+  product Product? @relation(fields: [product_id], references: [id])
+  product_id String?
+
+  public_id String
+  
+  @@map("files")
+}
+
 model Product {
   id String @id
   name String
@@ -45,6 +59,7 @@ model Product {
   sold Boolean @default(false)
   price Float
   condition String
+  images File[]
 
   sale Sale @relation(fields: [sale_id], references: [id])
   sale_id String
@@ -68,7 +83,8 @@ model Sale {
   purchase Shopping?
 
   category Category? @relation(fields: [category_id], references: [id])
-  category_id String
+  category_id String?
+
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
 

@@ -1,9 +1,13 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { REQUEST } from "@nestjs/core";
+import { UploadApiErrorResponse, UploadApiResponse } from "cloudinary";
 import { randomUUID } from "crypto";
 import { PrismaService } from "src/database/prisma.service";
 import { AuthRequest } from "../auth/models";
+import { CloudinaryService } from "../cloudinary/cloudinary.service";
 import { CreateSaleDto } from "./dto/create";
+import { FileUploadDto } from "./dto/create/file-upload.dto";
+import { DestroyProductImageDto } from "./dto/delete/destroy-product-image.dto";
 import { QuerySaleDto } from "./dto/queries/query-sale.dto";
 import { UpdateSaleDto } from "./dto/update";
 
@@ -11,6 +15,7 @@ import { UpdateSaleDto } from "./dto/update";
 export class SaleService {
   constructor(
     private readonly prisma: PrismaService,
+    private readonly cloudinaryService: CloudinaryService,
     @Inject(REQUEST) private readonly request: AuthRequest
   ) {}
 
@@ -69,6 +74,9 @@ export class SaleService {
         products: {
           where: {
             condition
+          },
+          include: {
+            images: true,
           }
         }
       }
@@ -137,7 +145,10 @@ export class SaleService {
         products: {
           where: {
             condition
-          }
+          },
+          include: {
+            images: true
+          },
         },
         saller: {
           select: {
@@ -226,6 +237,78 @@ export class SaleService {
       },
       data: {
         active: !sale.active
+      }
+    })
+
+  }
+
+  private async cloudinaryUpload (files: Array<Express.Multer.File>) {
+    const responses = await Promise.all(
+      files.map(file => 
+        this.cloudinaryService.uploadImage(file)
+      )
+    ) 
+
+    return files.map((_, index) => responses[index])
+  }
+
+  async createProductImages (files: Array<Express.Multer.File>, payload: FileUploadDto) {
+    const { productId } = payload
+
+    const products = await this.prisma.product.findMany({
+      where: {
+        id: productId
+      }
+    })
+
+   if (!products || products.length === 0) throw new NotFoundException({
+    description: 'PRODUCT_NOT_FOUND'
+   })
+
+    const responses = await this.cloudinaryUpload(files)
+
+    await this.prisma.product.update({
+      where: {
+        id: productId
+      },
+      data: {
+        images: {
+          createMany: {
+            data: responses.map(response => ({
+              public_id: response.public_id,
+              format: response.format,
+              height: response.height,
+              width: response.width,
+              id: randomUUID(),
+              url: response.url
+            }))
+          }
+        }
+      }
+    })
+
+    return responses
+  }
+
+  async destroyProductImage (payload: DestroyProductImageDto) {
+    const files = await this.prisma.file.findMany({
+      where: {
+        AND: [
+          ...payload.ids.map(id => ({
+            id
+          }))
+        ]
+      }
+    })
+
+    const public_ids = files.map(value => value.public_id)
+    const fileIds = files.map(file => ({ id: file.id }))
+
+    await this.cloudinaryService.destroyFiles(public_ids)
+    
+    await this.prisma.file.deleteMany({
+      where: {
+        AND: fileIds
       }
     })
 
