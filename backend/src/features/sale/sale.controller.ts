@@ -48,6 +48,6 @@ export class SaleController {
   @UseInterceptors(FilesInterceptor('files'))
   uploadFile(@UploadedFiles() files: Array<Express.Multer.File>, @Body() productsId: FileUploadDto) {
 
-    return this.service.fileUpload(files, productsId)
+    return this.service.productImages(files, productsId)
   }
 }

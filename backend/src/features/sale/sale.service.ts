@@ -1,5 +1,6 @@
 import { BadRequestException, Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { REQUEST } from "@nestjs/core";
+import { UploadApiErrorResponse, UploadApiResponse } from "cloudinary";
 import { randomUUID } from "crypto";
 import { PrismaService } from "src/database/prisma.service";
 import { AuthRequest } from "../auth/models";
@@ -234,7 +235,7 @@ export class SaleService {
 
   }
 
-  async fileUpload (files: Array<Express.Multer.File>, productsId: FileUploadDto) {
+  private async cloudinaryUpload (files: Array<Express.Multer.File>) {
     const responses = await Promise.all(
       files.map(file => 
         this.cloudinaryService.uploadImage(file)
@@ -242,5 +243,40 @@ export class SaleService {
     ) 
 
     return files.map((_, index) => responses[index])
+  }
+
+  async productImages (files: Array<Express.Multer.File>, payload: FileUploadDto) {
+    const { productId } = payload
+
+    const products = await this.prisma.product.findMany({
+      where: {
+        id: productId
+      }
+    })
+
+   if (!products || products.length === 0) throw new NotFoundException({
+    description: 'PRODUCTS_NOT_FOUND'
+   })
+
+    const responses = await this.cloudinaryUpload(files)
+
+    await this.prisma.product.update({
+      where: {
+        id: productId
+      },
+      data: {
+        images: {
+          createMany: {
+            data: responses.map(response => ({
+              format: response.format,
+              height: response.height,
+              width: response.width,
+              id: randomUUID(),
+              url: response.url
+            }))
+          }
+        }
+      }
+    })
   }
 }
