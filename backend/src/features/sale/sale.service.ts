@@ -3,7 +3,9 @@ import { REQUEST } from "@nestjs/core";
 import { randomUUID } from "crypto";
 import { PrismaService } from "src/database/prisma.service";
 import { AuthRequest } from "../auth/models";
-import { CreateSaleDto } from "./dto/create-sale.dto";
+import { CreateSaleDto } from "./dto/create";
+import { QuerySaleDto } from "./dto/queries/query-sale.dto";
+import { UpdateSaleDto } from "./dto/update";
 
 @Injectable()
 export class SaleService {
@@ -42,10 +44,33 @@ export class SaleService {
     })
   }
 
-  async findMany () {
+  async findMany (query?: QuerySaleDto) {
+    const { 
+      active = true, 
+      condition = 'new', 
+      order = 'desc' 
+    } = query || {}
+
     return await this.prisma.sale.findMany({
       where: {
-        saller_id: this.request.user.id
+        AND: [
+          { saller_id: this.request.user.id },
+          { active },
+        ]
+      },
+      orderBy: {
+        created_at: order
+      },
+      select: {
+        active: true,
+        category: true,
+        created_at: true,
+        updated_at: true,
+        products: {
+          where: {
+            condition
+          }
+        }
       }
     })
   }
@@ -93,11 +118,27 @@ export class SaleService {
     })
   }
 
-  async findAll () {
+  async findAll (query?: QuerySaleDto) {
+    const { 
+      active = true, 
+      condition = 'new', 
+      order = 'desc' 
+    } = query || {}
+
     const sales = await this.prisma.sale.findMany({
+      where: {
+        active
+      },
+      orderBy: {
+        created_at: order
+      },
       include: {
         category: true,
-        products: true,
+        products: {
+          where: {
+            condition
+          }
+        },
         saller: {
           select: {
             email: true,
@@ -109,5 +150,84 @@ export class SaleService {
     })
 
     return sales
+  }
+
+  async update (payload: UpdateSaleDto) {
+    const { 
+      id,
+      products,
+      category_id 
+    } = payload
+
+    const saleExist = await this.prisma.sale.findFirst({
+      where: {
+        AND: [
+          { id },
+          { category_id }
+        ]
+      },
+    })
+
+    if (!saleExist) throw new NotFoundException({
+      description: 'SALE_NOT_FOUND'
+    })
+
+    await this.prisma.sale.update({
+      where: {
+        id,
+      },
+      data: {
+        products: {
+          update: products.map(product => {
+            const { 
+              condition,
+              description,
+              name,
+              price,
+              sold,
+             } = product
+
+            return ({
+              where: { 
+                id: product.id
+              },
+              data: {
+                condition,
+                description,
+                name,
+                price,
+                sold,
+                updated_at: new Date()
+              }
+            })
+          })
+        }
+      }
+    })
+  }
+
+  async toggleActive (id: string) {
+    const sale = await this.prisma.sale.findFirst({
+      where: {
+        AND: [
+          { id },
+          { saller_id: this.request.user.id }
+        ]
+      }
+    })
+
+    if (!sale) throw new NotFoundException({
+      description: 'SALE_NOT_FOUND'
+    })
+
+    await this.prisma.sale.update({
+      where: {
+        id
+      },
+      data: {
+        active: !sale.active
+      }
+    })
+
   }
 }

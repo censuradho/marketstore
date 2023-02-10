@@ -1,5 +1,5 @@
 import { IsEnum, IsNumber, IsString } from "class-validator";
-import { Condition, Product } from "../model/product";
+import { Condition, Product } from "../../model/product";
 
 export class CreateProductDto implements Product {
   id: string
