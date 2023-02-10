@@ -1,9 +1,11 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { REQUEST } from "@nestjs/core";
 import { randomUUID } from "crypto";
 import { PrismaService } from "src/database/prisma.service";
 import { AuthRequest } from "../auth/models";
+import { CloudinaryService } from "../cloudinary/cloudinary.service";
 import { CreateSaleDto } from "./dto/create";
+import { FileUploadDto } from "./dto/create/file-upload.dto";
 import { QuerySaleDto } from "./dto/queries/query-sale.dto";
 import { UpdateSaleDto } from "./dto/update";
 
@@ -11,6 +13,7 @@ import { UpdateSaleDto } from "./dto/update";
 export class SaleService {
   constructor(
     private readonly prisma: PrismaService,
+    private readonly cloudinaryService: CloudinaryService,
     @Inject(REQUEST) private readonly request: AuthRequest
   ) {}
 
@@ -229,5 +232,15 @@ export class SaleService {
       }
     })
 
+  }
+
+  async fileUpload (files: Array<Express.Multer.File>, productsId: FileUploadDto) {
+    const responses = await Promise.all(
+      files.map(file => 
+        this.cloudinaryService.uploadImage(file)
+      )
+    ) 
+
+    return files.map((_, index) => responses[index])
   }
 }

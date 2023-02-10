@@ -1,11 +1,15 @@
-import { Body, Controller, Get, Param, Patch, Post, Put } from "@nestjs/common";
+import { Body, Controller, Get, Param, Patch, Post, Put, UploadedFiles, UseInterceptors } from "@nestjs/common";
+import { FilesInterceptor } from "@nestjs/platform-express/multer";
 import { CreateSaleDto } from "./dto/create";
-import { UpdateSaleDto } from "./dto/update";
+import { FileUploadDto } from "./dto/create/file-upload.dto";
 import { SaleService } from "./sale.service";
 
 @Controller('sale')
 export class SaleController {
-  constructor (private readonly service: SaleService) {}
+  constructor (
+    private readonly service: SaleService,
+
+  ) {}
 
   @Post()
   async create (@Body() body: CreateSaleDto) {
@@ -17,7 +21,7 @@ export class SaleController {
     return await this.service.findMany()
   }
 
-  @Get('/all')
+  @Get('all')
   async findAll () {
     return await this.service.findAll()
   }
@@ -38,5 +42,12 @@ export class SaleController {
       ...body,
       id
     })
+  }
+
+  @Post('upload')
+  @UseInterceptors(FilesInterceptor('files'))
+  uploadFile(@UploadedFiles() files: Array<Express.Multer.File>, @Body() productsId: FileUploadDto) {
+
+    return this.service.fileUpload(files, productsId)
   }
 }
