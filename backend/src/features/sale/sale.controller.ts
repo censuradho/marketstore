@@ -2,6 +2,7 @@ import { Body, Controller, Get, Param, Patch, Post, Put, UploadedFiles, UseInter
 import { FilesInterceptor } from "@nestjs/platform-express/multer";
 import { CreateSaleDto } from "./dto/create";
 import { FileUploadDto } from "./dto/create/file-upload.dto";
+import { DestroyProductImageDto } from "./dto/delete/destroy-product-image.dto";
 import { SaleService } from "./sale.service";
 
 @Controller('sale')
@@ -47,7 +48,11 @@ export class SaleController {
   @Post('upload')
   @UseInterceptors(FilesInterceptor('files'))
   uploadFile(@UploadedFiles() files: Array<Express.Multer.File>, @Body() productsId: FileUploadDto) {
+    return this.service.createProductImages(files, productsId)
+  }
 
-    return this.service.productImages(files, productsId)
+  @Put('/product/images/destroy')
+  async destroyProductImage (@Body() body: DestroyProductImageDto) {
+    return await this.service.destroyProductImage(body)
   }
 }

@@ -43,4 +43,17 @@ export class CloudinaryService {
         stream.pipe(upload);
     })
   }
+
+  async destroyFiles (public_ids: string[]) {
+    return await Promise.all(
+      public_ids.map(id => 
+        cloudinary
+        .uploader
+        .destroy(
+          id,
+          { invalidate: true },
+        )
+      )
+    )
+  }
 }

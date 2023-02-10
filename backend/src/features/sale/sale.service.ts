@@ -7,6 +7,7 @@ import { AuthRequest } from "../auth/models";
 import { CloudinaryService } from "../cloudinary/cloudinary.service";
 import { CreateSaleDto } from "./dto/create";
 import { FileUploadDto } from "./dto/create/file-upload.dto";
+import { DestroyProductImageDto } from "./dto/delete/destroy-product-image.dto";
 import { QuerySaleDto } from "./dto/queries/query-sale.dto";
 import { UpdateSaleDto } from "./dto/update";
 
@@ -73,6 +74,9 @@ export class SaleService {
         products: {
           where: {
             condition
+          },
+          include: {
+            images: true,
           }
         }
       }
@@ -141,7 +145,10 @@ export class SaleService {
         products: {
           where: {
             condition
-          }
+          },
+          include: {
+            images: true
+          },
         },
         saller: {
           select: {
@@ -245,7 +252,7 @@ export class SaleService {
     return files.map((_, index) => responses[index])
   }
 
-  async productImages (files: Array<Express.Multer.File>, payload: FileUploadDto) {
+  async createProductImages (files: Array<Express.Multer.File>, payload: FileUploadDto) {
     const { productId } = payload
 
     const products = await this.prisma.product.findMany({
@@ -255,7 +262,7 @@ export class SaleService {
     })
 
    if (!products || products.length === 0) throw new NotFoundException({
-    description: 'PRODUCTS_NOT_FOUND'
+    description: 'PRODUCT_NOT_FOUND'
    })
 
     const responses = await this.cloudinaryUpload(files)
@@ -268,6 +275,7 @@ export class SaleService {
         images: {
           createMany: {
             data: responses.map(response => ({
+              public_id: response.public_id,
               format: response.format,
               height: response.height,
               width: response.width,
@@ -278,5 +286,31 @@ export class SaleService {
         }
       }
     })
+
+    return responses
+  }
+
+  async destroyProductImage (payload: DestroyProductImageDto) {
+    const files = await this.prisma.file.findMany({
+      where: {
+        AND: [
+          ...payload.ids.map(id => ({
+            id
+          }))
+        ]
+      }
+    })
+
+    const public_ids = files.map(value => value.public_id)
+    const fileIds = files.map(file => ({ id: file.id }))
+
+    await this.cloudinaryService.destroyFiles(public_ids)
+    
+    await this.prisma.file.deleteMany({
+      where: {
+        AND: fileIds
+      }
+    })
+
   }
 }

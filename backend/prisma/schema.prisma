@@ -47,6 +47,8 @@ model File {
   product Product? @relation(fields: [product_id], references: [id])
   product_id String?
 
+  public_id String
+  
   @@map("files")
 }
 
