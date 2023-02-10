@@ -18,7 +18,73 @@ model User {
   email String @unique
   password String
   role String
+
+
+  sales Sale[]
+  shopping Shopping[]
+
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
   @@map("users")
+}
+
+
+model Category {
+  id String @id
+  name String
+
+  sales Sale[]
+  created_at DateTime @default(now())
+  @@map("categories")
+}
+
+model Product {
+  id String @id
+  name String
+  description String
+  sold Boolean @default(false)
+  price Float
+  condition String
+
+  sale Sale @relation(fields: [sale_id], references: [id])
+  sale_id String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+
+  @@map("products")
+}
+
+model Sale {
+  id String @id
+
+  active Boolean @default(true)
+  
+  saller User @relation(fields: [saller_id], references: [id])
+  saller_id String
+
+  products Product[]
+
+  purchase Shopping?
+
+  category Category? @relation(fields: [category_id], references: [id])
+  category_id String
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+
+  @@map("sales")
+}
+
+model Shopping {
+  id String @id
+
+  user User @relation(fields: [user_id], references: [id])
+  user_id String
+
+  item Sale @relation(fields: [item_id], references: [id])
+  item_id String @unique
+
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  @@map("shopping")
 }
