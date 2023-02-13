@@ -1,9 +1,10 @@
 import { HomeLayout } from "@/layout/app/home"
-import { productService } from "@/service/api/product"
-import { useEffect } from "react"
+import { MainLayout } from "@/layout/app/main"
 
 export default function HomePage () {
   return (
-    <HomeLayout />
+    <MainLayout>
+      <HomeLayout />
+    </MainLayout>
   )
 }

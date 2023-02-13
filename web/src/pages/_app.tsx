@@ -2,6 +2,7 @@
 import { 
   AuthProvider,
 } from '@/context'
+import { Login, SignUp } from '@/layout/auth/components'
 import type { AppProps } from 'next/app'
 import dynamic from 'next/dynamic'
 import { useEffect } from 'react'
@@ -21,6 +22,8 @@ export default function MyApp ({ Component, pageProps }: AppProps) {
   return (
     <ToastProvider>
       <AuthProvider>
+        <Login />
+        <SignUp />
         <Component {...pageProps} />
       </AuthProvider>
     </ToastProvider>

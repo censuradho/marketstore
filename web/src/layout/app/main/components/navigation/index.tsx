@@ -35,7 +35,7 @@ export function Navigation (props: NavigationProps) {
             <Styles.Item>
               <ActiveLink href={paths.app.product}>
                 <Icon name="dashboard" />
-                Dashboard
+                Navegar por tudo
               </ActiveLink>
             </Styles.Item>
             <AdminView>

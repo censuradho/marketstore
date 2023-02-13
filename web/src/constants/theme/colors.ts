@@ -33,4 +33,5 @@ export const colors = {
   foreground: ancesst.ancesst7,
   text: ancesst.ancesst4,
   border: ancesst.ancesst6,
+  backgroundOverlay: 'rgba(225, 225, 225, 0.3)'
 };

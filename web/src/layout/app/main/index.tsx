@@ -11,7 +11,7 @@ export function MainLayout ({ children }: any) {
   return (
     <Styles.Container>
       <Navigation onToggleMenu={() => setIsOpenNavigation(prevState => !prevState)} open={isOpenNavigation} />
-      <BottomNav onToggleMenu={() => setIsOpenNavigation(prevState => !prevState)}/>
+      <BottomNav onToggleMenu={() => setIsOpenNavigation(prevState => !prevState)} />
       <Styles.Main>
         {children}
       </Styles.Main>

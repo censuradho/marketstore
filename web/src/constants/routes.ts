@@ -5,8 +5,8 @@ export const paths = {
     report: '/app/relatorio',
   },
   auth: {
-    signIn: '/auth/login',
-    signUp: '/auth/cadastro',
+    signIn: 'login',
+    signUp: 'sign-up',
     sendConfirmation: '/auth/email/send-confirmation',
     resetPassword: '/auth/reset-password/new',
   },

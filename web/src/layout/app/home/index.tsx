@@ -1,3 +1,5 @@
+import { Container } from '@/components/common'
+import { Auth } from '@/layout/auth'
 import { saleService } from '@/service/api/sale'
 import { Sale } from '@/service/api/sale/types'
 import { useEffect, useState } from 'react'
@@ -15,7 +17,9 @@ export function HomeLayout (props: HomeProps) {
   }
 
   const renderSales = sales.map((value) => (
-    <ProductCard key={value.id} data={value} />
+    <li key={value.id}>
+      <ProductCard data={value} />
+    </li>
   ))
 
   useEffect(() => {
@@ -24,7 +28,12 @@ export function HomeLayout (props: HomeProps) {
 
   return (
     <Styles.Container>
-      {renderSales}
+      <Auth />
+      <Container>
+        <Styles.List>
+          {renderSales}
+        </Styles.List>
+      </Container>
     </Styles.Container>
   )
 }

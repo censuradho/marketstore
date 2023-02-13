@@ -1,9 +1,16 @@
 import { styled } from 'stitches.config'
 
-export const Container = styled('div', {})
+export const Container = styled('div', {
+  width: '100%',
+})
 
 export const Figure = styled('figure', {
-  width: '300px',
+  width: '100%',
   height: '300px',
-  position: 'relative'
+  position: 'relative',
+  marginBottom: '1rem',
+
+  img: {
+    borderRadius: '$default'
+  }
 })

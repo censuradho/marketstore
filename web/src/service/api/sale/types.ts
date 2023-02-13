@@ -31,5 +31,5 @@ export interface Sale {
   saller_id: string;
   created_at: string;
   updated_at: string;
-  products: Product[]
+  product: Product
 }

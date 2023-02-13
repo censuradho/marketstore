@@ -78,5 +78,6 @@ export const icons = {
   report: BisReport,
   lock: AiFillLock,
   trendingUp: IosTrendingUp,
-  money: MdAttachMoney
+  money: MdAttachMoney,
+  close: AiOutlineClose
 }

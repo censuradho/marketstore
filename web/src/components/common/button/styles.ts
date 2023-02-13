@@ -62,6 +62,12 @@ export const Button = styled('button', {
         '*': {
           color: '$heading'
         }
+      },
+
+      letter: {
+        background: 'none',
+        height: 'auto',
+        fontWeight: 800,
       }
     }
   },

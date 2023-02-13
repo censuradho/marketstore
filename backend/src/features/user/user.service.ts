@@ -24,7 +24,7 @@ export class UserService {
     })
 
     if (userExist) throw new ForbiddenException({
-      message: 'USER_ALREADY_EXIST',
+      description: 'USER_ALREADY_EXIST',
     })
 
     const passwordHash = await bcrypt.hash(password, 10)
