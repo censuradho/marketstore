@@ -1,17 +1,16 @@
 
 import { Type } from "class-transformer";
-import { ArrayMinSize, IsArray, IsString, ValidateNested } from "class-validator";
+import { IsNotEmptyObject, IsString, ValidateNested } from "class-validator";
 import { CreateProductDto } from ".";
 import { Sale } from "../../model/sale";
 
 export class CreateSaleDto implements Sale {
   @IsString()
   category_id: string;
-  @IsArray()
-  @ArrayMinSize(1)
+  @IsNotEmptyObject()
   @ValidateNested({ each: true })
   @Type(() => CreateProductDto)
-  products: CreateProductDto[];
+  product: CreateProductDto;
 
   id: string;
   active: boolean;

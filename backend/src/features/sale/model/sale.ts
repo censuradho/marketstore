@@ -8,5 +8,5 @@ export class Sale implements ISale {
   saller_id: string;
   created_at: Date;
   updated_at: Date;
-  products: Product[]
+  product: Product
 }

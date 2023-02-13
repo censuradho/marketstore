@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { ArrayMinSize, IsArray, IsString, ValidateNested } from "class-validator";
+import { ArrayMinSize, IsArray, IsNotEmpty, IsNotEmptyObject, IsString, ValidateNested } from "class-validator";
 import { CreateSaleDto } from "../create";
 import { UpdateProductDto } from "./update-product.dto";
 
@@ -7,9 +7,8 @@ export class UpdateSaleDto extends CreateSaleDto {
   @IsString()
   id: string
   
-  @IsArray()
-  @ArrayMinSize(1)
+  @IsNotEmptyObject()
   @ValidateNested({ each: true })
   @Type(() => UpdateProductDto)
-  products: UpdateProductDto[]
+  product: UpdateProductDto
 }
