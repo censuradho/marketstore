@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { PrismaService } from './database/prisma.service';
@@ -8,7 +9,7 @@ import { RolesGuard } from './features/auth/guards/role.guard';
 
 
 @Module({
-  imports: [FeaturesModule],
+  imports: [ConfigModule.forRoot(), FeaturesModule],
   controllers: [AppController],
   providers: [PrismaService,
     {

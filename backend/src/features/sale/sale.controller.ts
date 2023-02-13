@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Param, Patch, Post, Put, UploadedFiles, UseInterceptors } from "@nestjs/common";
 import { FilesInterceptor } from "@nestjs/platform-express/multer";
+import { IsPublic } from "../auth/decorators";
 import { CreateSaleDto } from "./dto/create";
 import { FileUploadDto } from "./dto/create/file-upload.dto";
 import { DestroyProductImageDto } from "./dto/delete/destroy-product-image.dto";
@@ -22,6 +23,7 @@ export class SaleController {
     return await this.service.findMany()
   }
 
+  @IsPublic()
   @Get('all')
   async findAll () {
     return await this.service.findAll()
