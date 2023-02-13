@@ -29,15 +29,13 @@ export class SaleService {
             id: payload.category_id
           }
         },  
-        products: {
-          createMany: {
-            data: payload.products.map(product => ({
-              id: randomUUID(),
-              condition: product.condition,
-              description: product?.description,
-              name: product.name,
-              price: product.price,
-            }))
+        product: {
+          create: {
+            id: randomUUID(),
+            condition: payload.product.condition,
+            description: payload.product?.description,
+            name: payload.product.name,
+            price: payload.product.price,
           }
         },
         saller: {
@@ -61,6 +59,11 @@ export class SaleService {
         AND: [
           { saller_id: this.request.user.id },
           { active },
+          { 
+            product: {
+              condition
+            } 
+          }
         ]
       },
       orderBy: {
@@ -71,10 +74,7 @@ export class SaleService {
         category: true,
         created_at: true,
         updated_at: true,
-        products: {
-          where: {
-            condition
-          },
+        product: {
           include: {
             images: true,
           }
@@ -96,7 +96,7 @@ export class SaleService {
         ]
       },
       include: {
-        products: {
+        product: {
           select: {
             id: true
           }
@@ -114,12 +114,9 @@ export class SaleService {
       },
       data: {
         active: false,
-        products: {
-          updateMany: {
-            where: {},
-            data: {
-              sold: true
-            }
+        product: {
+          update: {
+            sold: true
           }
         }
       }
@@ -135,17 +132,21 @@ export class SaleService {
 
     const sales = await this.prisma.sale.findMany({
       where: {
-        active
+        AND: [
+          { active },
+          {
+            product: {
+              condition
+            }
+          }
+        ]
       },
       orderBy: {
         created_at: order
       },
       include: {
         category: true,
-        products: {
-          where: {
-            condition
-          },
+        product: {
           include: {
             images: true
           },
@@ -166,7 +167,7 @@ export class SaleService {
   async update (payload: UpdateSaleDto) {
     const { 
       id,
-      products,
+      product,
       category_id 
     } = payload
 
@@ -183,35 +184,27 @@ export class SaleService {
       description: 'SALE_NOT_FOUND'
     })
 
+    const {
+      condition,
+      description,
+      name,
+      price,
+      sold,
+     }  = product
+
     await this.prisma.sale.update({
       where: {
         id,
       },
       data: {
-        products: {
-          update: products.map(product => {
-            const { 
-              condition,
-              description,
-              name,
-              price,
-              sold,
-             } = product
-
-            return ({
-              where: { 
-                id: product.id
-              },
-              data: {
-                condition,
-                description,
-                name,
-                price,
-                sold,
-                updated_at: new Date()
-              }
-            })
-          })
+        product: {
+          update: {
+            condition,
+            description,
+            name,
+            price,
+            sold,
+          }
         }
       }
     })
@@ -239,7 +232,6 @@ export class SaleService {
         active: !sale.active
       }
     })
-
   }
 
   private async cloudinaryUpload (files: Array<Express.Multer.File>) {
