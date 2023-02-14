@@ -1,10 +1,15 @@
 import { api } from ".."
-import { Sale } from "./types"
+import { CreateSaleRequest, Sale } from "./types"
 
 function findAll () {
   return api.get<Sale[]>('/sale/all')
 }
 
+function create (payload: CreateSaleRequest) {
+  return api.post('/sale', payload)
+}
+
 export const saleService = {
-  findAll
+  findAll,
+  create
 }

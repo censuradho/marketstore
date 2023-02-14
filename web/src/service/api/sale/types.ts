@@ -33,3 +33,8 @@ export interface Sale {
   updated_at: string;
   product: Product
 }
+
+export interface CreateSaleRequest {
+  category_id: string;
+  product: Pick<Product, 'name' | 'description' | 'price'>
+}

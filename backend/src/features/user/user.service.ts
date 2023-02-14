@@ -1,9 +1,11 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {  Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
 import { CreateUserDto } from './dto/create';
 import * as bcrypt from 'bcrypt'
 import { randomUUID } from 'crypto';
 import { Role } from './model/roles';
+import { ForbiddenException } from 'src/decorators/errors';
+import { USER_ERRORS } from './errors';
 
 @Injectable()
 export class UserService {
@@ -23,9 +25,7 @@ export class UserService {
       }
     })
 
-    if (userExist) throw new ForbiddenException({
-      description: 'USER_ALREADY_EXIST',
-    })
+    if (userExist) throw new ForbiddenException(USER_ERRORS.USER_ALREADY_EXIST)
 
     const passwordHash = await bcrypt.hash(password, 10)
 

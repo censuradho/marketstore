@@ -1,11 +1,14 @@
 import { Body, Controller, Get, Param, Patch, Post, Put, UploadedFiles, UseInterceptors } from "@nestjs/common";
 import { FilesInterceptor } from "@nestjs/platform-express/multer";
+import { ApiTags } from "@nestjs/swagger/dist";
 import { IsPublic } from "../auth/decorators";
 import { CreateSaleDto } from "./dto/create";
 import { FileUploadDto } from "./dto/create/file-upload.dto";
 import { DestroyProductImageDto } from "./dto/delete/destroy-product-image.dto";
+import { UpdateSaleDto } from "./dto/update";
 import { SaleService } from "./sale.service";
 
+@ApiTags('sale')
 @Controller('sale')
 export class SaleController {
   constructor (
@@ -40,7 +43,7 @@ export class SaleController {
   }
 
   @Put(':id')
-  async update (@Body() body: CreateSaleDto, @Param('id') id: string) {
+  async update (@Body() body: UpdateSaleDto, @Param('id') id: string) {
     await this.service.update({
       ...body,
       id

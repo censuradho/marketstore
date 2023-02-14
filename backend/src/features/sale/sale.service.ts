@@ -1,8 +1,8 @@
-import { BadRequestException, Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { REQUEST } from "@nestjs/core";
-import { UploadApiErrorResponse, UploadApiResponse } from "cloudinary";
 import { randomUUID } from "crypto";
 import { PrismaService } from "src/database/prisma.service";
+import { NotFoundException } from "src/decorators/errors";
 import { AuthRequest } from "../auth/models";
 import { CloudinaryService } from "../cloudinary/cloudinary.service";
 import { CreateSaleDto } from "./dto/create";
@@ -10,6 +10,7 @@ import { FileUploadDto } from "./dto/create/file-upload.dto";
 import { DestroyProductImageDto } from "./dto/delete/destroy-product-image.dto";
 import { QuerySaleDto } from "./dto/queries/query-sale.dto";
 import { UpdateSaleDto } from "./dto/update";
+import { SALE_ERRORS } from "./errorst";
 
 @Injectable()
 export class SaleService {
@@ -104,9 +105,7 @@ export class SaleService {
       } 
     })
 
-    if (!announcement) throw new NotFoundException({
-      description: 'SALE_NOT_FOUND'
-    })
+    if (!announcement) throw new NotFoundException(SALE_ERRORS.SALE_NOT_FOUND)
 
     await this.prisma.sale.update({
       where: {
@@ -180,16 +179,13 @@ export class SaleService {
       },
     })
 
-    if (!saleExist) throw new NotFoundException({
-      description: 'SALE_NOT_FOUND'
-    })
+    if (!saleExist) throw new NotFoundException(SALE_ERRORS.SALE_NOT_FOUND)
 
     const {
       condition,
       description,
       name,
       price,
-      sold,
      }  = product
 
     await this.prisma.sale.update({
@@ -203,7 +199,6 @@ export class SaleService {
             description,
             name,
             price,
-            sold,
           }
         }
       }
@@ -220,9 +215,7 @@ export class SaleService {
       }
     })
 
-    if (!sale) throw new NotFoundException({
-      description: 'SALE_NOT_FOUND'
-    })
+    if (!sale) throw new NotFoundException(SALE_ERRORS.SALE_NOT_FOUND)
 
     await this.prisma.sale.update({
       where: {
@@ -253,9 +246,7 @@ export class SaleService {
       }
     })
 
-   if (!products || products.length === 0) throw new NotFoundException({
-    description: 'PRODUCT_NOT_FOUND'
-   })
+   if (!products || products.length === 0) throw new NotFoundException(SALE_ERRORS.PRODUCT_NOT_FOUND)
 
     const responses = await this.cloudinaryUpload(files)
 

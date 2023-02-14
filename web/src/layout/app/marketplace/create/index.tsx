@@ -1,6 +1,8 @@
 import { Box, ButtonIcon, Container, Icon, Typography } from '@/components/common'
+import { paths } from '@/constants/routes'
 import { categoryService } from '@/service/api/category'
 import { Category, CategoryName } from '@/service/api/category/types'
+import { resolvePath } from '@/utils/helpers'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import * as Styles from './styles'
@@ -32,7 +34,7 @@ export function MarketplaceCreateLayout () {
 
     return (
       <li key={value.id}>
-        <Styles.Category href="" >
+        <Styles.Category href={resolvePath(paths.marketplace.item, { categoryId: value.id })} >
           <Styles.IconBox>
             <Icon name={value.name as any} size={30} color="heading" />
           </Styles.IconBox>

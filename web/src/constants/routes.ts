@@ -1,7 +1,8 @@
 export const paths = {
   home: '/',
   marketplace: {
-    create: '/marketplace/create'
+    create: '/marketplace/create',
+    item: '/marketplace/create/:categoryId'
   },
   app: {
     product: '/app/product',

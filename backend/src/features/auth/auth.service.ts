@@ -1,10 +1,12 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { UserService } from "../user/user.service";
 import * as bcrypt from 'bcrypt'
 import { User } from "../user/model/user";
 import { JwtService } from "@nestjs/jwt";
 import { UserPayload } from "./models/user-payload";
 import { CreateUserDto } from "../user/dto/create";
+import { UnauthorizedException } from "src/decorators/errors";
+import { USER_ERRORS } from "../user/errors";
 
 @Injectable()
 export class AuthService {
@@ -29,16 +31,13 @@ export class AuthService {
     const user = await this.userService.findByEmail(email)
 
     if (!user)
-      throw new UnauthorizedException({
-        description: 'EMAIL_PASSWORD_INCORRECT',
-      })
+      throw new UnauthorizedException(USER_ERRORS.EMAIL_PASSWORD_INCORRECT)
 
     const isValidPassword = await bcrypt.compare(password, user.password)
 
     if (!isValidPassword)
-      throw new UnauthorizedException({
-        description: 'EMAIL_PASSWORD_INCORRECT',
-      })
+      throw new UnauthorizedException(USER_ERRORS.EMAIL_PASSWORD_INCORRECT)
+
 
     return {
       ...user,
@@ -51,9 +50,8 @@ export class AuthService {
     const user = await this.userService.findByEmail(email)
 
     if (!user)
-      throw new UnauthorizedException({
-        description: 'USER_NOT_FOUND',
-      })
+      throw new UnauthorizedException(USER_ERRORS.USER_NOT_FOUND)
+
 
     const payload: UserPayload = {
       sub: user.id,
