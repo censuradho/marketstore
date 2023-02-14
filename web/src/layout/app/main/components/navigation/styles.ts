@@ -24,6 +24,7 @@ export const Navigation = styled('nav', {
     maxWidth: '16.875rem'
   },
   zIndex: 10,
+  padding: '1rem 32px 1rem 39px',
 
   borderRight: '$border 1px solid',
   '@laptops-min': {
@@ -89,7 +90,8 @@ export const Item = styled('li', {
     display: 'flex',
     gap: '0.5rem',
     fontSize: '.875rem',
-    padding: '1rem 32px 1rem 39px',
+    padding: '1rem 0 1rem 0',
+
     '&.active': {
       background: '$primary',
       color: '$heading'

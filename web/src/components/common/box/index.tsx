@@ -26,6 +26,7 @@ export function Box (props: BoxProps) {
     fullWidth,
     gap,
     marginTop,
+    marginBottom,
     justifyContent,
     flexDirection,
     alignItems,
@@ -47,7 +48,8 @@ export function Box (props: BoxProps) {
         display: 'flex',
         width: fullWidth ? '100%' : 'auto',
         ...(gap && { gap: `${gap}rem` }),
-        ...(marginTop && { marginTop: `${marginTop}rem` })
+        ...(marginTop && { marginTop: `${marginTop}rem` }),
+        ...(marginBottom && { marginBottom: `${marginBottom}rem` }),
       }}
     >
       {children}

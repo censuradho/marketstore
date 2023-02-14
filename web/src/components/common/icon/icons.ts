@@ -1,7 +1,9 @@
 import {
   AiFillLinkedin,
   AiFillLock,
-  AiOutlineClose, AiOutlineHome, AiOutlineMail, AiOutlineUser
+  AiFillTag,
+  AiOutlineArrowLeft,
+  AiOutlineClose, AiOutlineHome, AiOutlineMail, AiOutlinePlus, AiOutlineUser
 } from '@meronex/icons/ai';
 import {
   BiCodeAlt, BiCommand, BilFacebookSquare, BilGithub,
@@ -12,14 +14,15 @@ import {
   EnLocationPin
 } from '@meronex/icons/en';
 import {
-  FaDatabase, FaOpencart, FaSuitcase
+  FaBox,
+  FaDatabase, FaOpencart, FaStore, FaSuitcase
 } from '@meronex/icons/fa';
 import {
   IosTrendingUp,
   LogoWhatsapp
 } from '@meronex/icons/ios';
 import {
-  RiFileCopyLine, RiShareBoxLine
+  RiFileCopyLine, RiNavigationLine, RiShareBoxLine
 } from '@meronex/icons/ri';
 import {
   VscMenu
@@ -39,8 +42,10 @@ import {
   MdcClockFast, MdcPokerChip, MdcWeb
 } from '@meronex/icons/mdc';
 import { MdAttachMoney } from '@meronex/icons/md';
+import { GiStoneBlock }  from '@meronex/icons/gi/';
 
 export const icons = {
+  add: AiOutlinePlus,
   suiteCase: FaSuitcase,
   github: BilGithub,
   instagram: BilInstagramAlt,
@@ -79,5 +84,10 @@ export const icons = {
   lock: AiFillLock,
   trendingUp: IosTrendingUp,
   money: MdAttachMoney,
-  close: AiOutlineClose
+  close: AiOutlineClose,
+  store: FaStore,
+  tag: AiFillTag,
+  digital: RiNavigationLine,
+  physical: FaBox,
+  arrowLeft: AiOutlineArrowLeft
 }

@@ -1,4 +1,4 @@
-import { Avatar, Icon, ActiveLink, AdminView, Box } from '@/components/common'
+import { Avatar, Icon, ActiveLink, AdminView, Box, Button } from '@/components/common'
 import { paths } from '@/constants/routes'
 import { useAuth } from '@/context/auth'
 import * as Styles from './styles'
@@ -31,25 +31,22 @@ export function Navigation (props: NavigationProps) {
           </Styles.Root>
         </Styles.Header>
         <Styles.List>
-          <AdminView>
-            <Styles.Item>
-              <ActiveLink href={paths.app.product}>
-                <Icon name="dashboard" />
+          <Styles.Item>
+            <ActiveLink href={paths.home}>
+              <Icon name="store" />
                 Navegar por tudo
-              </ActiveLink>
-            </Styles.Item>
-            <AdminView>
-              <Styles.Item>
-                <ActiveLink href={paths.app.report}>
-                  <Icon name="report" />
-                  <Box alignItems="center" gap={0.5}>
-                  Relatório
-                  </Box>
-                </ActiveLink>
-              </Styles.Item>
-            </AdminView>
-          </AdminView>
+            </ActiveLink>
+          </Styles.Item>
+          <Styles.Item>
+            <ActiveLink href={paths.home}>
+              <Icon name="tag" />
+              <Box alignItems="center" gap={0.5}>
+                  Venda
+              </Box>
+            </ActiveLink>
+          </Styles.Item>
         </Styles.List>
+        <Button as="a" href={paths.marketplace.create} variant="secondary" fullWidth>Criar novo classificado</Button>
       </Styles.Navigation>
     </Styles.Overlay>
   )
